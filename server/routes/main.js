@@ -10,17 +10,17 @@ router.get('', async (req, res) => {
         description : "Blog website made using node js, express and mongodb"
     }
 
-    let perPage = 10;
-    let page = req.query.page || 1;
+    let perPage = 6 ;
+    let page = Math.max(1, parseInt(req.query.page) || 1);
 
     const data = await Post.aggregate([{ $sort: {createdAt: -1} }])
     .skip(perPage * page - perPage)
     .limit(perPage)
     .exec();
 
-    const count = await Post.count();
+    const count = await Post.countDocuments();
     const nextPage = parseInt(page)+1;
-    const hasNextPage = nextPage <= Math.ceil(cout/perPage);
+    const hasNextPage = nextPage <= Math.ceil(count/perPage);
     
     res.render('index',
          {locals, 
@@ -33,6 +33,31 @@ router.get('', async (req, res) => {
     }
     
 });
+
+
+/*
+Get
+Post :id
+*/
+router.get('/post/:id', async(req, res) => {
+    try {
+       
+    let slug = req.params.id;
+    const data = await Post.findById({ _id: slug});
+
+    const locals = {
+      title: data.title,
+      description: "Simple blog website"  
+    } 
+
+    res.render('post', {locals, data}); 
+    } catch (error) {
+        console.log(error);
+    }
+    
+})
+
+
 
 router.get('/about', (req, res) => {
     res.render('about')
