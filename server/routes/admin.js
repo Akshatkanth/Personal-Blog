@@ -32,12 +32,8 @@ router.post('/admin', async(req, res)=>{
     try {
 
         const{ username, password } = req.body;
-        
-        if(req.body.username === 'admin' && req.body.password === 'password'){
-            res.send('youre logged in')
-        }else{
-            res.send('Wrong username and password')
-        }
+        console.log(req.body);
+        res.redirect('/admin')
 
     } catch (error) {
         console.log(error)
