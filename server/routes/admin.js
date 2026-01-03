@@ -212,6 +212,19 @@ router.get('/edit-post/:id', authMiddleware, async(req, res)=>{
     
 
 /*
+Delete
+Admin - delete post
+*/
+router.delete('/delete-post/:id', authMiddleware, async(req, res) => {
+    try {
+        await Post.deleteOne({_id:req.params.id});
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+/*
 Post
 Admin - Register
 */
@@ -236,5 +249,16 @@ router.post('/admin/register', async(req, res)=>{
     }
 });
 
+
+/*
+Get
+Admin - Logout
+*/
+
+router.get('/logout', (req, res) =>{
+    res.clearCookie('token');
+    // res.json({message:'logout successful!'});
+    res.redirect('/')
+})
 
 module.exports = router;
